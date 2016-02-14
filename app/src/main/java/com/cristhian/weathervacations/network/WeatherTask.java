@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.cristhian.weathervacations.interfaces.IWeatherResponse;
 import com.cristhian.weathervacations.interfaces.IWeatherService;
 import com.cristhian.weathervacations.models.Weather;
 
@@ -19,6 +20,8 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
 
     private final String LOG_TAG = WeatherTask.class.getSimpleName();
 
+    private IWeatherResponse iWeatherResponse;
+
     private static final int SPLASH_TIME = 3000;
 
     String url;
@@ -30,8 +33,9 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
 
     Context context;
 
-    public WeatherTask(Context context) {
+    public WeatherTask(Context context, IWeatherResponse weatherResponse) {
         this.context = context;
+        this.iWeatherResponse=weatherResponse;
     }
 
     @Override
@@ -77,5 +81,14 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
 
 
         return weather;
+    }
+
+    @Override
+    protected void onPostExecute(Weather weather) {
+        if (weather != null && existWeather) {
+            iWeatherResponse.weatherResponse(true);
+        } else {
+            iWeatherResponse.weatherResponse(false);
+        }
     }
 }

@@ -73,7 +73,7 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
      */
     private void getWeatherPosition(String url) {
         Log.d(LOG_TAG, "Call weatherTask!!!!!!!");
-        WeatherTask weatherTask = new WeatherTask(this);
+        WeatherTask weatherTask = new WeatherTask(this, this);
         weatherTask.execute(url, String.valueOf(latitudeNetwork), String.valueOf(longitudeNetwork), apiKey);
     }
 
@@ -81,10 +81,10 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
     @Override
     public void weatherResponse(Boolean response) {
         if (response) {
-//            goToMainActivity();
-//            Toast.makeText(this, getResources().getString(R.string.ok), Toast.LENGTH_LONG);
+            goToMainActivity();
+            Toast.makeText(this, getResources().getString(R.string.ok), Toast.LENGTH_LONG);
         } else {
-//            Toast.makeText(this, getResources().getString(R.string.fail), Toast.LENGTH_LONG);
+            Toast.makeText(this, getResources().getString(R.string.fail), Toast.LENGTH_LONG);
         }
     }
 
