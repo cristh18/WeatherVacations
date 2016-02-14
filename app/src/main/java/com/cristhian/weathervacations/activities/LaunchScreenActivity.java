@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.cristhian.weathervacations.R;
 import com.cristhian.weathervacations.interfaces.IWeatherResponse;
+import com.cristhian.weathervacations.models.Main;
 import com.cristhian.weathervacations.models.Weather;
 import com.cristhian.weathervacations.network.WeatherTask;
 import com.cristhian.weathervacations.utils.Utilies;
@@ -46,8 +47,8 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
 //    double longitudeGPS, latitudeGPS;
     Double longitudeNetwork, latitudeNetwork;
 
-    String url;
-    String apiKey;
+    public static String url;
+    public static String apiKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,10 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
     private void goToMainActivity(Weather weather) {
         intent = new Intent(LaunchScreenActivity.this, MainActivity.class);
         Bundle mBundle = new Bundle();
-        mBundle.putParcelable("weatherDetail", weather.getMain());
+        Main mainTemp = weather.getMain();
+        mainTemp.setLon(longitudeNetwork);
+        mainTemp.setLat(latitudeNetwork);
+        mBundle.putParcelable("weatherDetail", mainTemp);
         intent.putExtras(mBundle);
         startActivity(intent);
         finish();

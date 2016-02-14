@@ -12,11 +12,23 @@ public class Weather {
     @SerializedName("main")
     Main main;
 
+    @Expose
+    @SerializedName("coord")
+    Coord coord;
+
     public Main getMain() {
         return main;
     }
 
     public void setMain(Main main) {
         this.main = main;
+    }
+
+    public Coord getCoord() {
+        return coord;
+    }
+
+    public void setCoord(Coord coord) {
+        this.coord = coord;
     }
 }

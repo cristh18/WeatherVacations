@@ -35,6 +35,10 @@ public class Main implements Parcelable {
     @SerializedName("sea_level")
     Double sea_level;
 
+    Double lon;
+
+    Double lat;
+
     @Expose
     @SerializedName("grnd_level")
     Double grnd_level;
@@ -95,6 +99,22 @@ public class Main implements Parcelable {
         this.grnd_level = grnd_level;
     }
 
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
     public static final Parcelable.Creator<Main> CREATOR = new Parcelable.Creator<Main>() {
 
         public Main createFromParcel(Parcel source) {
@@ -107,6 +127,8 @@ public class Main implements Parcelable {
             main.temp_max = source.readDouble();
             main.sea_level = source.readDouble();
             main.grnd_level = source.readDouble();
+            main.lon = source.readDouble();
+            main.lat = source.readDouble();
 
 
             return main;
@@ -135,6 +157,8 @@ public class Main implements Parcelable {
         parcel.writeDouble(temp_max);
         parcel.writeDouble(sea_level);
         parcel.writeDouble(grnd_level);
+        parcel.writeDouble(lon);
+        parcel.writeDouble(lat);
 
     }
 }
