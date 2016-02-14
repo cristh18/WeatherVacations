@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.cristhian.weathervacations.R;
 import com.cristhian.weathervacations.interfaces.IWeatherResponse;
+import com.cristhian.weathervacations.models.Weather;
 import com.cristhian.weathervacations.network.WeatherTask;
 import com.cristhian.weathervacations.utils.Utilies;
 
@@ -79,9 +80,9 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
 
 
     @Override
-    public void weatherResponse(Boolean response) {
+    public void weatherResponse(Boolean response, Weather weather) {
         if (response) {
-            goToMainActivity();
+            goToMainActivity(weather);
             Toast.makeText(this, getResources().getString(R.string.ok), Toast.LENGTH_LONG);
         } else {
             Toast.makeText(this, getResources().getString(R.string.fail), Toast.LENGTH_LONG);
@@ -91,8 +92,11 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
     /**
      *
      */
-    private void goToMainActivity() {
+    private void goToMainActivity(Weather weather) {
         intent = new Intent(LaunchScreenActivity.this, MainActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putParcelable("weatherDetail", weather.getMain());
+        intent.putExtras(mBundle);
         startActivity(intent);
         finish();
     }

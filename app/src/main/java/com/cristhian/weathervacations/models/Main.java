@@ -1,12 +1,15 @@
 package com.cristhian.weathervacations.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Cristhian on 2/14/2016.
  */
-public class Main {
+public class Main implements Parcelable {
 
     @Expose
     @SerializedName("temp")
@@ -90,5 +93,48 @@ public class Main {
 
     public void setGrnd_level(Double grnd_level) {
         this.grnd_level = grnd_level;
+    }
+
+    public static final Parcelable.Creator<Main> CREATOR = new Parcelable.Creator<Main>() {
+
+        public Main createFromParcel(Parcel source) {
+
+            Main main = new Main();
+            main.temp = source.readDouble();
+            main.pressure = source.readDouble();
+            main.humidity = source.readDouble();
+            main.temp_min = source.readDouble();
+            main.temp_max = source.readDouble();
+            main.sea_level = source.readDouble();
+            main.grnd_level = source.readDouble();
+
+
+            return main;
+
+        }
+
+        public Main[] newArray(int size) {
+
+            return new Main[size];
+
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+        parcel.writeDouble(temp);
+        parcel.writeDouble(pressure);
+        parcel.writeDouble(humidity);
+        parcel.writeDouble(temp_min);
+        parcel.writeDouble(temp_max);
+        parcel.writeDouble(sea_level);
+        parcel.writeDouble(grnd_level);
+
     }
 }

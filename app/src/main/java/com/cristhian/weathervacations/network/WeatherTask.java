@@ -86,9 +86,9 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
     @Override
     protected void onPostExecute(Weather weather) {
         if (weather != null && existWeather) {
-            iWeatherResponse.weatherResponse(true);
+            iWeatherResponse.weatherResponse(true, weather);
         } else {
-            iWeatherResponse.weatherResponse(false);
+            iWeatherResponse.weatherResponse(false, null);
         }
     }
 }
