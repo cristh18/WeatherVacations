@@ -17,10 +17,12 @@ import android.widget.Toast;
 
 import com.cristhian.weathervacations.R;
 import com.cristhian.weathervacations.activities.LaunchScreenActivity;
+import com.cristhian.weathervacations.interfaces.IBestWeatherResponse;
 import com.cristhian.weathervacations.interfaces.IWeatherResponse;
 import com.cristhian.weathervacations.models.Main;
 import com.cristhian.weathervacations.models.Place;
 import com.cristhian.weathervacations.models.Weather;
+import com.cristhian.weathervacations.network.BestWeatherTask;
 import com.cristhian.weathervacations.network.WeatherTask;
 import com.cristhian.weathervacations.utils.Utilies;
 import com.google.android.gms.maps.CameraUpdate;
@@ -30,12 +32,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Cristhian on 2/13/2016.
  */
-public class HomeFragment extends Fragment implements IWeatherResponse {
+public class HomeFragment extends Fragment implements IBestWeatherResponse {
 
     private final String LOG_TAG = HomeFragment.class.getSimpleName();
 
@@ -54,6 +57,12 @@ public class HomeFragment extends Fragment implements IWeatherResponse {
     boolean secondLocation;
     TextView textView2;
 
+    TextView textView3;
+    TextView textView4;
+
+    List<Place> places;
+    public static List<Weather> weathers = new ArrayList<>(2);
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +73,8 @@ public class HomeFragment extends Fragment implements IWeatherResponse {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         initMap();
         goToLocation(main.getLat(), main.getLon(), 15);
+
+        places = new ArrayList<Place>(2);
 
         searchField = (EditText) rootView.findViewById(R.id.editText1);
         searchButton = (Button) rootView.findViewById(R.id.button1);
@@ -101,6 +112,12 @@ public class HomeFragment extends Fragment implements IWeatherResponse {
 
         textView2 = (TextView) rootView.findViewById(R.id.weather2);
         textView2.setVisibility(View.GONE);
+
+        textView3 = (TextView) rootView.findViewById(R.id.weather3);
+        textView3.setVisibility(View.GONE);
+
+        textView4 = (TextView) rootView.findViewById(R.id.weather4);
+        textView4.setVisibility(View.GONE);
 
         return rootView;
     }
@@ -151,30 +168,41 @@ public class HomeFragment extends Fragment implements IWeatherResponse {
 
         EditText editText = null;
         String searchString = null;
-        if (firstLocation){
+        if (firstLocation) {
             editText = (EditText) getActivity().findViewById(R.id.editText1);
-        }else if (secondLocation){
+        } else if (secondLocation) {
             editText = (EditText) getActivity().findViewById(R.id.editText2);
         }
         searchString = editText.getText().toString();
 
-        Geocoder gc = new Geocoder(getActivity());
-        List<Address> list = gc.getFromLocationName(searchString, 1);
+        if (searchString != null && !searchString.equalsIgnoreCase("")) {
+            Geocoder gc = new Geocoder(getActivity());
+            List<Address> list = gc.getFromLocationName(searchString, 1);
 
-        if (list.size() > 0 && !list.isEmpty()) {
-            Address add = list.get(0);
-            String locality = add.getLocality();
-            Toast.makeText(getActivity(), "Found: " + locality, Toast.LENGTH_SHORT).show();
-            double latitude = add.getLatitude();
-            double longitude = add.getLongitude();
-            Log.e(this.getClass().getName(), "Locality: " + locality + " -- Latitude=" + latitude + ", Longitude=" + longitude);
-            goToLocation(latitude, longitude, 15);
-            /**---*/
-            Place place = new Place();
-            place.setName(locality);
-            place.setLatitude(latitude);
-            place.setLongitude(longitude);
-            getPlaceWeather(place);
+            if (list.size() > 0 && !list.isEmpty()) {
+                Address add = list.get(0);
+                String locality = add.getLocality();
+                Toast.makeText(getActivity(), "Found: " + locality, Toast.LENGTH_SHORT).show();
+                double latitude = add.getLatitude();
+                double longitude = add.getLongitude();
+                Log.e(this.getClass().getName(), "Locality: " + locality + " -- Latitude=" + latitude + ", Longitude=" + longitude);
+                goToLocation(latitude, longitude, 15);
+                /**---*/
+                Place place = new Place();
+                place.setName(locality);
+                place.setLatitude(latitude);
+                place.setLongitude(longitude);
+                places.add(place);
+
+//                if (places.size() == 2) {
+                getPlaceWeather(place);
+                // getWeather();
+//                }
+
+
+            }
+        } else {
+            Toast.makeText(getActivity(), "Please fill all fields", Toast.LENGTH_SHORT);
         }
     }
 
@@ -186,28 +214,57 @@ public class HomeFragment extends Fragment implements IWeatherResponse {
     }
 
     /**
-     * @param place
+     * @param
      */
     private void getWeather(Place place) {
         Log.d(LOG_TAG, "Call weatherTask!!!!!!!");
         String url = LaunchScreenActivity.url;
         String apiKey = LaunchScreenActivity.apiKey;
         String units = LaunchScreenActivity.units;
-        WeatherTask weatherTask = new WeatherTask(getActivity(), this);
-        weatherTask.execute(url, String.valueOf(place.getLatitude()), String.valueOf(place.getLongitude()), apiKey, units);
+
+        BestWeatherTask bestWeatherTask = new BestWeatherTask(getActivity(), this);
+        bestWeatherTask.execute(url, String.valueOf(place.getLatitude()), String.valueOf(place.getLongitude()), apiKey, units);
+
+
     }
 
+    /**
+     * @param response
+     * @param weather
+     */
     @Override
     public void weatherResponse(Boolean response, Weather weather) {
         if (response) {
             Log.e(LOG_TAG, "There are response from selected site");
-            if (firstLocation) {
-                textView.setText("Temp in selected place is: " + Utilies.formatTemperature(getActivity(), weather.getMain().getTemp()));
-            } else if (secondLocation) {
-                textView2.setVisibility(View.VISIBLE);
-                textView2.setText("Temp in selected place is: " + Utilies.formatTemperature(getActivity(), weather.getMain().getTemp()));
-            }
+            if (weathers != null && weathers.size() < 2) {
+                weathers.add(weather);
+                if (!weathers.isEmpty() && weathers.size() == 2) {
+                    //places.clear();
+                    //update UI
+                    textView2.setVisibility(View.VISIBLE);
+                    textView2.setText("Temp in selected place 1 is: " + Utilies.formatTemperature(getActivity(), weathers.get(0).getMain().getTemp()));
 
+                    textView3.setVisibility(View.VISIBLE);
+                    textView3.setText("Temp in selected place 2 is: " + Utilies.formatTemperature(getActivity(), weathers.get(1).getMain().getTemp()));
+
+                    textView4.setVisibility(View.VISIBLE);
+                    Double maxWeather = getMaxWeather(weathers.get(0).getMain().getTemp(), weathers.get(1).getMain().getTemp());
+                    textView4.setText("The place to visit this vacations is: " + Utilies.formatTemperature(getActivity(), maxWeather));
+
+                }
+
+            }
         }
+    }
+
+    /**
+     * @param temp1
+     * @param temp2
+     * @return
+     */
+    private Double getMaxWeather(Double temp1, Double temp2) {
+//        Double maxWeather = Math.abs((temp1 - temp2));
+        Double maxWeather = Math.max(temp1, temp2);
+        return maxWeather;
     }
 }

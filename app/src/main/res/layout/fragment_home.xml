@@ -71,6 +71,18 @@
         android:layout_height="wrap_content"
         android:text="Enter to home screen" />
 
+    <TextView
+        android:id="@+id/weather3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter to home screen" />
+
+    <TextView
+        android:id="@+id/weather4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter to home screen" />
+
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/map"
