@@ -25,6 +25,7 @@ public class BestWeatherTask extends AsyncTask<String, Void, Weather> {
     String units;
     String latitude;
     String longitude;
+    String placeName;
 
     Context context;
     private IBestWeatherResponse iBestWeatherResponse;
@@ -42,6 +43,7 @@ public class BestWeatherTask extends AsyncTask<String, Void, Weather> {
         longitude = params[2];
         apiKey = params[3];
         units = params[4];
+        placeName = params[5];
 
         Weather weather = getWeather();
         return weather;
@@ -64,6 +66,7 @@ public class BestWeatherTask extends AsyncTask<String, Void, Weather> {
 
             if (response.body() != null) {
                 weather = response.body();
+                weather.getMain().setPlaceName(placeName);
                 existWeather = true;
             }
 

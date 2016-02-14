@@ -223,7 +223,7 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
         String units = LaunchScreenActivity.units;
 
         BestWeatherTask bestWeatherTask = new BestWeatherTask(getActivity(), this);
-        bestWeatherTask.execute(url, String.valueOf(place.getLatitude()), String.valueOf(place.getLongitude()), apiKey, units);
+        bestWeatherTask.execute(url, String.valueOf(place.getLatitude()), String.valueOf(place.getLongitude()), apiKey, units, place.getName());
 
 
     }
@@ -242,14 +242,14 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
                     //places.clear();
                     //update UI
                     textView2.setVisibility(View.VISIBLE);
-                    textView2.setText("Temp in selected place 1 is: " + Utilies.formatTemperature(getActivity(), weathers.get(0).getMain().getTemp()));
+                    textView2.setText("Temp in " + weathers.get(0).getMain().getPlaceName() + " is: " + Utilies.formatTemperature(getActivity(), weathers.get(0).getMain().getTemp()));
 
                     textView3.setVisibility(View.VISIBLE);
-                    textView3.setText("Temp in selected place 2 is: " + Utilies.formatTemperature(getActivity(), weathers.get(1).getMain().getTemp()));
+                    textView3.setText("Temp in " + weathers.get(1).getMain().getPlaceName() + " is: " + Utilies.formatTemperature(getActivity(), weathers.get(1).getMain().getTemp()));
 
                     textView4.setVisibility(View.VISIBLE);
-                    Double maxWeather = getMaxWeather(weathers.get(0).getMain().getTemp(), weathers.get(1).getMain().getTemp());
-                    textView4.setText("The place to visit this vacations is: " + Utilies.formatTemperature(getActivity(), maxWeather));
+                    String namePlaceMaxWeather = getMaxWeather(weathers);
+                    textView4.setText("The place to visit this vacations is: " + namePlaceMaxWeather);
 
                 }
 
@@ -258,13 +258,19 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
     }
 
     /**
-     * @param temp1
-     * @param temp2
+     *
+     * @param weathers
      * @return
      */
-    private Double getMaxWeather(Double temp1, Double temp2) {
-//        Double maxWeather = Math.abs((temp1 - temp2));
-        Double maxWeather = Math.max(temp1, temp2);
-        return maxWeather;
+    private String getMaxWeather(List<Weather> weathers) {
+        String vacationPlace = null;
+        Double maxWeather = Math.max(weathers.get(0).getMain().getTemp(), weathers.get(1).getMain().getTemp());
+        for (Weather w:weathers) {
+            if (maxWeather.doubleValue()==w.getMain().getTemp().doubleValue()){
+                vacationPlace = w.getMain().getPlaceName();
+                break;
+            }
+        }
+        return vacationPlace;
     }
 }
