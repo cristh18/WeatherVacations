@@ -26,6 +26,7 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
 
     String url;
     String apiKey;
+    String units;
     String latitude;
     String longitude;
 
@@ -44,6 +45,7 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
         latitude = params[1];
         longitude = params[2];
         apiKey = params[3];
+        units = params[4];
         try {
             Thread.sleep(SPLASH_TIME);
             Weather weather = getWeather();
@@ -65,7 +67,7 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
         try {
             Retrofit retrofit = new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
             IWeatherService iWeatherService = retrofit.create(IWeatherService.class);
-            Call<Weather> call = iWeatherService.getWeather(latitude, longitude, apiKey);
+            Call<Weather> call = iWeatherService.getWeather(units, latitude, longitude, apiKey);
             Response<Weather> response = call.execute();
             Log.e("LOG", "Retrofit Response: " + response.raw().toString());
 

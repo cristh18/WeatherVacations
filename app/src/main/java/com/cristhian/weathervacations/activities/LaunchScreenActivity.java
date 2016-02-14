@@ -49,6 +49,7 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
 
     public static String url;
     public static String apiKey;
+    public static String units;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
         setContentView(R.layout.activity_launch_screen);
         url = getString(R.string.base_url);
         apiKey = getString(R.string.api_key);
+        units = getString(R.string.units);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         toggleNetworkUpdates();
@@ -76,7 +78,7 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
     private void getWeatherPosition(String url) {
         Log.d(LOG_TAG, "Call weatherTask!!!!!!!");
         WeatherTask weatherTask = new WeatherTask(this, this);
-        weatherTask.execute(url, String.valueOf(latitudeNetwork), String.valueOf(longitudeNetwork), apiKey);
+        weatherTask.execute(url, String.valueOf(latitudeNetwork), String.valueOf(longitudeNetwork), apiKey, units);
     }
 
 

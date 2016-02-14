@@ -13,6 +13,7 @@ public interface IWeatherService {
 
     @GET("weather?")
     Call<Weather> getWeather(
+            @Query("units") String units,
             @Query("lat") String latitude,
             @Query("lon") String longitude,
             @Query("appid") String apiKey

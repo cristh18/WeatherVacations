@@ -22,6 +22,7 @@ import com.cristhian.weathervacations.models.Main;
 import com.cristhian.weathervacations.models.Place;
 import com.cristhian.weathervacations.models.Weather;
 import com.cristhian.weathervacations.network.WeatherTask;
+import com.cristhian.weathervacations.utils.Utilies;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,6 +47,13 @@ public class HomeFragment extends Fragment implements IWeatherResponse {
     Button searchButton;
     TextView textView;
 
+    EditText searchField2;
+    Button searchButton2;
+
+    boolean firstLocation;
+    boolean secondLocation;
+    TextView textView2;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,12 +65,29 @@ public class HomeFragment extends Fragment implements IWeatherResponse {
         initMap();
         goToLocation(main.getLat(), main.getLon(), 15);
 
-        searchField = (EditText)rootView.findViewById(R.id.editText1);
-        searchButton = (Button)rootView.findViewById(R.id.button1);
+        searchField = (EditText) rootView.findViewById(R.id.editText1);
+        searchButton = (Button) rootView.findViewById(R.id.button1);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
+                    firstLocation = true;
+                    secondLocation = false;
+                    geoLocate(v);
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, e.toString());
+                }
+            }
+        });
+
+        searchField2 = (EditText) rootView.findViewById(R.id.editText2);
+        searchButton2 = (Button) rootView.findViewById(R.id.button2);
+        searchButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    firstLocation = false;
+                    secondLocation = true;
                     geoLocate(v);
                 } catch (IOException e) {
                     Log.e(LOG_TAG, e.toString());
@@ -71,7 +96,11 @@ public class HomeFragment extends Fragment implements IWeatherResponse {
         });
 
         textView = (TextView) rootView.findViewById(R.id.weather);
-        textView.setText("Temp: ".concat(String.valueOf(main.getTemp())));
+        textView.setText("Temp: ".concat(Utilies.formatTemperature(getActivity(), main.getTemp())));
+        //textView.setText("Temp: ".concat(String.valueOf(main.getTemp())));
+
+        textView2 = (TextView) rootView.findViewById(R.id.weather2);
+        textView2.setVisibility(View.GONE);
 
         return rootView;
     }
@@ -120,8 +149,14 @@ public class HomeFragment extends Fragment implements IWeatherResponse {
     public void geoLocate(View v) throws IOException {
         hideSoftKeyboard(v);
 
-        EditText editText = (EditText) getActivity().findViewById(R.id.editText1);
-        String searchString = editText.getText().toString();
+        EditText editText = null;
+        String searchString = null;
+        if (firstLocation){
+            editText = (EditText) getActivity().findViewById(R.id.editText1);
+        }else if (secondLocation){
+            editText = (EditText) getActivity().findViewById(R.id.editText2);
+        }
+        searchString = editText.getText().toString();
 
         Geocoder gc = new Geocoder(getActivity());
         List<Address> list = gc.getFromLocationName(searchString, 1);
@@ -144,30 +179,35 @@ public class HomeFragment extends Fragment implements IWeatherResponse {
     }
 
     /**
-     *
      * @param place
      */
-    private void getPlaceWeather(Place place){
+    private void getPlaceWeather(Place place) {
         getWeather(place);
     }
 
     /**
-     *
      * @param place
      */
     private void getWeather(Place place) {
         Log.d(LOG_TAG, "Call weatherTask!!!!!!!");
         String url = LaunchScreenActivity.url;
         String apiKey = LaunchScreenActivity.apiKey;
+        String units = LaunchScreenActivity.units;
         WeatherTask weatherTask = new WeatherTask(getActivity(), this);
-        weatherTask.execute(url, String.valueOf(place.getLatitude()), String.valueOf(place.getLongitude()), apiKey);
+        weatherTask.execute(url, String.valueOf(place.getLatitude()), String.valueOf(place.getLongitude()), apiKey, units);
     }
 
     @Override
     public void weatherResponse(Boolean response, Weather weather) {
-        if (response){
+        if (response) {
             Log.e(LOG_TAG, "There are response from selected site");
-            textView.setText("Temp in selected place is: " + weather.getMain().getTemp());
+            if (firstLocation) {
+                textView.setText("Temp in selected place is: " + Utilies.formatTemperature(getActivity(), weather.getMain().getTemp()));
+            } else if (secondLocation) {
+                textView2.setVisibility(View.VISIBLE);
+                textView2.setText("Temp in selected place is: " + Utilies.formatTemperature(getActivity(), weather.getMain().getTemp()));
+            }
+
         }
     }
 }

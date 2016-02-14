@@ -35,8 +35,12 @@ public class Main implements Parcelable {
     @SerializedName("sea_level")
     Double sea_level;
 
+    @Expose
+    @SerializedName("lon")
     Double lon;
 
+    @Expose
+    @SerializedName("lat")
     Double lat;
 
     @Expose
