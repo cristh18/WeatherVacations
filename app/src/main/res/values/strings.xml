@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">WeatherVacations</string>
+    <string name="app_title">Weather Vacations</string>
+    <string name="exit_app_msg">Are you sure you want to exit?</string>
+    <string name="yes_option">Yes</string>
+    <string name="no_option">No</string>
+    <string name="toolbar_subtitle">Categories</string>
+    <string name="action_settings">Settings</string>
+    <string name="ok">Successful access</string>
+    <string name="fail">Can not access the application</string>
+
 </resources>

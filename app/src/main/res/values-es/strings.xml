@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AppCatalog</string>
+    <string name="app_title">Climad de vacaciones</string>
+    <string name="exit_app_msg">¿Desea salir de la Aplicación?</string>
+    <string name="yes_option">Si</string>
+    <string name="no_option">No</string>
+    <string name="toolbar_subtitle">Categorias</string>
+    <string name="action_settings">Configuración</string>
+    <string name="ok">Acceso exitoso</string>
+    <string name="fail">No es posible ingresar a la aplicación</string>
+</resources>
