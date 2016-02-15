@@ -130,6 +130,19 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
         });
 
 
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Log.e(LOG_TAG, "Latitude: " + latLng.latitude + ", Longitude: " + latLng.longitude);
+                if (searchField.getText().toString().equalsIgnoreCase("")){
+                    searchField.setText(latLng.latitude+","+latLng.longitude);
+                }else if (searchField2.getText().toString().equalsIgnoreCase("")){
+                    searchField2.setText(latLng.latitude+","+latLng.longitude);
+                }
+            }
+        });
+
+
         textView = (TextView) rootView.findViewById(R.id.weather);
         textView.setText(Utilies.formatTemperature(getActivity(), main.getTemp()));
 
