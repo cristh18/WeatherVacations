@@ -10,6 +10,8 @@
     <string name="ok">Successful access</string>
     <string name="fail">Can not access the application</string>
     <string name="best_weather">Recommended vacation: </string>
+    <string name="location1">Location 1</string>
+    <string name="location2">Location 2</string>
 
 
     <!-- Strings for formatting weather-related data -->

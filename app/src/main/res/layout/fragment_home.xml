@@ -22,25 +22,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:ems="10"
                 android:fontFamily="sans-serif-light"
-                android:textColor="@color/white01"
-                android:hint="Location 1"
-                android:singleLine="true" />
+                android:gravity="center"
+                android:hint="@string/location1"
+                android:imeOptions="actionSend"
+                android:singleLine="true"
+                android:textColor="@color/white01" />
 
             <EditText
                 android:id="@+id/editText2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:ems="10"
                 android:fontFamily="sans-serif-light"
-                android:textColor="@color/white01"
-                android:hint="Location 2"
+                android:gravity="center"
+                android:hint="@string/location2"
                 android:imeOptions="actionSend"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textColor="@color/white01" />
 
 
         </LinearLayout>
@@ -74,15 +75,14 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed"
                     android:text="Bogotá"
-                    android:textColor="@color/white01"
-                    android:textAppearance="?android:textAppearanceLarge" />
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textColor="@color/white01" />
 
                 <TextView
                     android:id="@+id/weather"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text="Prueba"
                     android:textColor="@color/white01"
                     android:textSize="40dp" />
             </LinearLayout>
@@ -123,17 +123,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
-                        android:text="Bogotá"
-                        android:textColor="@color/white01"
-                        android:textAppearance="?android:textAppearanceLarge" />
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="@color/white01" />
 
                     <TextView
                         android:id="@+id/weather2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:textColor="@color/white01"
-                        android:text="Prueba" />
+                        android:textColor="@color/white01" />
 
                 </LinearLayout>
 
@@ -166,17 +164,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
-                        android:text="Bogotá"
-                        android:textColor="@color/white01"
-                        android:textAppearance="?android:textAppearanceLarge" />
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="@color/white01" />
 
                     <TextView
                         android:id="@+id/weather3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:textColor="@color/white01"
-                        android:text="Prueba" />
+                        android:textColor="@color/white01" />
 
                 </LinearLayout>
 
@@ -198,8 +194,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fontFamily="sans-serif-light"
-                android:textColor="@color/white01"
-                android:text="Enter to home screen" />
+                android:textColor="@color/white01" />
 
         </LinearLayout>
 

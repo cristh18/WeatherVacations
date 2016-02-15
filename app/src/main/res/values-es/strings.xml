@@ -9,4 +9,6 @@
     <string name="ok">Acceso exitoso</string>
     <string name="fail">No es posible ingresar a la aplicación</string>
     <string name="best_weather">Recomendado de vacaciones: </string>
+    <string name="location1">Ubicación 1</string>
+    <string name="location2">Ubicación 2</string>
 </resources>

@@ -84,64 +84,14 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
         places = new ArrayList<Place>(2);
 
         searchField = (EditText) rootView.findViewById(R.id.editText1);
-        searchField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                try {
-                    firstLocation = true;
-                    secondLocation = false;
-                    geoLocate(v);
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, e.toString());
-                }
-            }
-        });
+        searchField.setOnFocusChangeListener(searchFieldFocusListener);
+        searchField.setOnEditorActionListener(searchFieldActionListener);
 
         searchField2 = (EditText) rootView.findViewById(R.id.editText2);
-        searchField2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                try {
-                    firstLocation = false;
-                    secondLocation = true;
-                    geoLocate(v);
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, e.toString());
-                }
-            }
-        });
+        searchField2.setOnFocusChangeListener(searchField2FocusListener);
+        searchField2.setOnEditorActionListener(searchField2ActionListener);
 
-        searchField2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    try {
-                        firstLocation = false;
-                        secondLocation = true;
-                        geoLocate(v);
-                    } catch (IOException e) {
-                        Log.e(LOG_TAG, e.toString());
-                    }
-                    handled = true;
-                }
-                return handled;
-            }
-        });
-
-
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                Log.e(LOG_TAG, "Latitude: " + latLng.latitude + ", Longitude: " + latLng.longitude);
-                if (searchField.getText().toString().equalsIgnoreCase("")){
-                    searchField.setText(latLng.latitude+","+latLng.longitude);
-                }else if (searchField2.getText().toString().equalsIgnoreCase("")){
-                    searchField2.setText(latLng.latitude+","+latLng.longitude);
-                }
-            }
-        });
-
+        mMap.setOnMapClickListener(mapListener);
 
         textView = (TextView) rootView.findViewById(R.id.weather);
         textView.setText(Utilies.formatTemperature(getActivity(), main.getTemp()));
@@ -294,9 +244,9 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
                     textView2.setVisibility(View.VISIBLE);
                     textViewName2.setVisibility(View.VISIBLE);
                     weatherImage2.setVisibility(View.VISIBLE);
-                    if (weathers.get(0).getMain().getPlaceName() != null){
+                    if (weathers.get(0).getMain().getPlaceName() != null) {
                         textViewName2.setText(weathers.get(0).getMain().getPlaceName().toString());
-                    }else {
+                    } else {
                         textViewName2.setText("");
                     }
                     textView2.setText(Utilies.formatTemperature(getActivity(), weathers.get(0).getMain().getTemp()).toString());
@@ -305,9 +255,9 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
                     textView3.setVisibility(View.VISIBLE);
                     textViewName3.setVisibility(View.VISIBLE);
                     weatherImage3.setVisibility(View.VISIBLE);
-                    if (weathers.get(1).getMain().getPlaceName() != null){
+                    if (weathers.get(1).getMain().getPlaceName() != null) {
                         textViewName3.setText(weathers.get(1).getMain().getPlaceName().toString());
-                    }else {
+                    } else {
                         textViewName3.setText("");
                     }
                     textView3.setText(Utilies.formatTemperature(getActivity(), weathers.get(1).getMain().getTemp()).toString());
@@ -342,4 +292,95 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
         }
         return vacationPlace;
     }
+
+
+    /**
+     *
+     */
+    private View.OnFocusChangeListener searchFieldFocusListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            try {
+                firstLocation = true;
+                secondLocation = false;
+                geoLocate(v);
+            } catch (IOException e) {
+                Log.e(LOG_TAG, e.toString());
+            }
+        }
+    };
+
+    /**
+     *
+     */
+    private View.OnFocusChangeListener searchField2FocusListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            try {
+                firstLocation = false;
+                secondLocation = true;
+                geoLocate(v);
+            } catch (IOException e) {
+                Log.e(LOG_TAG, e.toString());
+            }
+        }
+    };
+
+    /**
+     *
+     */
+    private TextView.OnEditorActionListener searchFieldActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                try {
+                    firstLocation = true;
+                    secondLocation = false;
+                    geoLocate(v);
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, e.toString());
+                }
+                handled = true;
+            }
+            return handled;
+        }
+    };
+
+    /**
+     *
+     */
+    private TextView.OnEditorActionListener searchField2ActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                try {
+                    firstLocation = false;
+                    secondLocation = true;
+                    geoLocate(v);
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, e.toString());
+                }
+                handled = true;
+            }
+            return handled;
+        }
+    };
+
+    /**
+     *
+     */
+    private GoogleMap.OnMapClickListener mapListener = new GoogleMap.OnMapClickListener() {
+        @Override
+        public void onMapClick(LatLng latLng) {
+            Log.e(LOG_TAG, "Latitude: " + latLng.latitude + ", Longitude: " + latLng.longitude);
+            if (searchField.getText().toString().equalsIgnoreCase("")) {
+                searchField.setText(latLng.latitude + "," + latLng.longitude);
+            } else if (searchField2.getText().toString().equalsIgnoreCase("")) {
+                searchField2.setText(latLng.latitude + "," + latLng.longitude);
+            }
+        }
+    };
+
 }
