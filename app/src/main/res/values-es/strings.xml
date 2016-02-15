@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">AppCatalog</string>
-    <string name="app_title">Climad de vacaciones</string>
+    <string name="app_name">WeatherVacations</string>
+    <string name="app_title">Clima para vacaciones</string>
     <string name="exit_app_msg">¿Desea salir de la Aplicación?</string>
     <string name="yes_option">Si</string>
     <string name="no_option">No</string>
