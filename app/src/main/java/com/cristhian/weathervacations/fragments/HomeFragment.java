@@ -272,14 +272,22 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
                     textView2.setVisibility(View.VISIBLE);
                     textViewName2.setVisibility(View.VISIBLE);
                     weatherImage2.setVisibility(View.VISIBLE);
-                    textViewName2.setText(weathers.get(0).getMain().getPlaceName().toString());
+                    if (weathers.get(0).getMain().getPlaceName() != null){
+                        textViewName2.setText(weathers.get(0).getMain().getPlaceName().toString());
+                    }else {
+                        textViewName2.setText("");
+                    }
                     textView2.setText(Utilies.formatTemperature(getActivity(), weathers.get(0).getMain().getTemp()).toString());
                     Picasso.with(getActivity()).load(Utilies.getArtResourceForWeatherCondition(weathers.get(0).getWeather().get(0).getId())).into(weatherImage2);
 
                     textView3.setVisibility(View.VISIBLE);
                     textViewName3.setVisibility(View.VISIBLE);
                     weatherImage3.setVisibility(View.VISIBLE);
-                    textViewName3.setText(weathers.get(1).getMain().getPlaceName().toString());
+                    if (weathers.get(1).getMain().getPlaceName() != null){
+                        textViewName3.setText(weathers.get(1).getMain().getPlaceName().toString());
+                    }else {
+                        textViewName3.setText("");
+                    }
                     textView3.setText(Utilies.formatTemperature(getActivity(), weathers.get(1).getMain().getTemp()).toString());
                     Picasso.with(getActivity()).load(Utilies.getArtResourceForWeatherCondition(weathers.get(1).getWeather().get(0).getId())).into(weatherImage3);
 
