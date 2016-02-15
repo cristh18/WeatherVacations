@@ -267,11 +267,8 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
                     textView4.setVisibility(View.VISIBLE);
                     String namePlaceMaxWeather = getMaxWeather(weathers);
                     textView4.setText(getResources().getString(R.string.best_weather) + namePlaceMaxWeather);
-                    places.clear();
-                    weathers.clear();
-                    firstLocation = false;
-                    secondLocation = false;
 
+                    clearFields();
                 }
 
             }
@@ -364,4 +361,15 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
         }
     };
 
+    /**
+     *
+     */
+    private void clearFields() {
+        places.clear();
+        weathers.clear();
+        firstLocation = false;
+        secondLocation = false;
+        searchField.setText("");
+        searchField2.setText("");
+    }
 }
