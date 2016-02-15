@@ -39,8 +39,6 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
     public static boolean IS_TABLET = false;
 
     LocationManager locationManager;
-    //    double longitudeBest, latitudeBest;
-//    double longitudeGPS, latitudeGPS;
     Double longitudeNetwork, latitudeNetwork;
 
     public static String url;
@@ -162,19 +160,9 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
             latitudeNetwork = location.getLatitude();
             Log.e(LOG_TAG, "LONGITUDE: " + longitudeNetwork + ", LATITUDE: " + latitudeNetwork);
             Toast.makeText(LaunchScreenActivity.this, "Network Provider update", Toast.LENGTH_SHORT).show();
-            if (latitudeNetwork != null && longitudeNetwork != null){
+            if (latitudeNetwork != null && longitudeNetwork != null) {
                 getWeatherPosition(url);
             }
-
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    //longitudeValueNetwork.setText(longitudeNetwork + "");
-//                    //latitudeValueNetwork.setText(latitudeNetwork + "");
-//                    Log.e(LOG_TAG, "LONGITUDE: " + longitudeNetwork + ", LATITUDE: " + latitudeNetwork);
-//                    Toast.makeText(LaunchScreenActivity.this, "Network Provider update", Toast.LENGTH_SHORT).show();
-//                }
-//            });
         }
 
         @Override

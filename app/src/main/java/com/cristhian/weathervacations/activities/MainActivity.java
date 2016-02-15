@@ -30,10 +30,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         main = intent.getParcelableExtra("weatherDetail");
 
-//        if (main != null){
-//            goToMainScreen(main);
-//        }
-
         if (servicesOK()) {
             if (main != null) {
                 goToMainScreen(main);
@@ -41,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Map not connected!", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     /**

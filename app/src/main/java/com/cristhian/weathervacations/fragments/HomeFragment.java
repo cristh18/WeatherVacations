@@ -46,6 +46,8 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
 
     private final String LOG_TAG = HomeFragment.class.getSimpleName();
 
+    private static final int ZOOM_VALUE = 15;
+
     private Main main;
 
     GoogleMap mMap;
@@ -69,6 +71,7 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
 
     List<Place> places;
     public static List<WeatherData> weathers = new ArrayList<>(2);
+    int count;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,13 +82,13 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         initMap();
-        goToLocation(main.getLat(), main.getLon(), 15);
+        goToLocation(main.getLat(), main.getLon(), ZOOM_VALUE);
 
         places = new ArrayList<Place>(2);
+        count = 0;
 
         searchField = (EditText) rootView.findViewById(R.id.editText1);
         searchField.setOnFocusChangeListener(searchFieldFocusListener);
-        searchField.setOnEditorActionListener(searchFieldActionListener);
 
         searchField2 = (EditText) rootView.findViewById(R.id.editText2);
         searchField2.setOnFocusChangeListener(searchField2FocusListener);
@@ -191,7 +194,7 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
                 double latitude = add.getLatitude();
                 double longitude = add.getLongitude();
                 Log.e(this.getClass().getName(), "Locality: " + locality + " -- Latitude=" + latitude + ", Longitude=" + longitude);
-                goToLocation(latitude, longitude, 15);
+                goToLocation(latitude, longitude, ZOOM_VALUE);
 
                 Place place = new Place();
                 place.setName(locality);
@@ -239,8 +242,6 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
             if (weathers != null && weathers.size() < 2) {
                 weathers.add(weather);
                 if (!weathers.isEmpty() && weathers.size() == 2) {
-                    //places.clear();
-                    //update UI
                     textView2.setVisibility(View.VISIBLE);
                     textViewName2.setVisibility(View.VISIBLE);
                     weatherImage2.setVisibility(View.VISIBLE);
@@ -329,27 +330,6 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
     /**
      *
      */
-    private TextView.OnEditorActionListener searchFieldActionListener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            boolean handled = false;
-            if (actionId == EditorInfo.IME_ACTION_SEND) {
-                try {
-                    firstLocation = true;
-                    secondLocation = false;
-                    geoLocate(v);
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, e.toString());
-                }
-                handled = true;
-            }
-            return handled;
-        }
-    };
-
-    /**
-     *
-     */
     private TextView.OnEditorActionListener searchField2ActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -375,10 +355,11 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
         @Override
         public void onMapClick(LatLng latLng) {
             Log.e(LOG_TAG, "Latitude: " + latLng.latitude + ", Longitude: " + latLng.longitude);
-            if (searchField.getText().toString().equalsIgnoreCase("")) {
-                searchField.setText(latLng.latitude + "," + latLng.longitude);
-            } else if (searchField2.getText().toString().equalsIgnoreCase("")) {
+            count++;
+            if (Utilies.isEvenOrOdd(count)) {
                 searchField2.setText(latLng.latitude + "," + latLng.longitude);
+            } else {
+                searchField.setText(latLng.latitude + "," + latLng.longitude);
             }
         }
     };

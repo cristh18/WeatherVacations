@@ -69,4 +69,19 @@ public class Utilies {
         return -1;
     }
 
+    /**
+     *
+     * @param number
+     * @return
+     */
+    public static boolean isEvenOrOdd(int number) {
+        boolean even = false;
+        if (number % 2 == 0) {
+            even = true;
+        } else {
+            even = false;
+        }
+        return even;
+    }
+
 }
