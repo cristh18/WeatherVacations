@@ -1,6 +1,5 @@
 package com.cristhian.weathervacations.fragments;
 
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -222,19 +220,14 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
                 double longitude = add.getLongitude();
                 Log.e(this.getClass().getName(), "Locality: " + locality + " -- Latitude=" + latitude + ", Longitude=" + longitude);
                 goToLocation(latitude, longitude, 15);
-                /**---*/
+
                 Place place = new Place();
                 place.setName(locality);
                 place.setLatitude(latitude);
                 place.setLongitude(longitude);
                 places.add(place);
 
-//                if (places.size() == 2) {
                 getPlaceWeather(place);
-                // getWeather();
-//                }
-
-
             }
         } else {
             Toast.makeText(getActivity(), "Please fill all fields", Toast.LENGTH_SHORT);
@@ -292,7 +285,7 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
 
                     textView4.setVisibility(View.VISIBLE);
                     String namePlaceMaxWeather = getMaxWeather(weathers);
-                    textView4.setText("The place to visit this vacations is: " + namePlaceMaxWeather);
+                    textView4.setText(getResources().getString(R.string.best_weather) + namePlaceMaxWeather);
                     places.clear();
                     weathers.clear();
                     firstLocation = false;

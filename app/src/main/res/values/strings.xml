@@ -9,6 +9,8 @@
     <string name="action_settings">Settings</string>
     <string name="ok">Successful access</string>
     <string name="fail">Can not access the application</string>
+    <string name="best_weather">Recommended vacation: </string>
+
 
     <!-- Strings for formatting weather-related data -->
     <!-- Temperature format [CHAR LIMIT=5 -->
