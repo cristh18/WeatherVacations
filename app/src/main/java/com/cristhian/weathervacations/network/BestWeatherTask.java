@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.cristhian.weathervacations.interfaces.IBestWeatherResponse;
 import com.cristhian.weathervacations.interfaces.IWeatherService;
-import com.cristhian.weathervacations.models.Weather;
+import com.cristhian.weathervacations.models.WeatherData;
 
 import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
@@ -16,7 +16,7 @@ import retrofit2.Retrofit;
 /**
  * Created by Cristhian on 2/14/2016.
  */
-public class BestWeatherTask extends AsyncTask<String, Void, Weather> {
+public class BestWeatherTask extends AsyncTask<String, Void, WeatherData> {
 
     private final String LOG_TAG = BestWeatherTask.class.getSimpleName();
 
@@ -37,7 +37,7 @@ public class BestWeatherTask extends AsyncTask<String, Void, Weather> {
     }
 
     @Override
-    protected Weather doInBackground(String... params) {
+    protected WeatherData doInBackground(String... params) {
         url = params[0];
         latitude = params[1];
         longitude = params[2];
@@ -45,7 +45,7 @@ public class BestWeatherTask extends AsyncTask<String, Void, Weather> {
         units = params[4];
         placeName = params[5];
 
-        Weather weather = getWeather();
+        WeatherData weather = getWeather();
         return weather;
     }
 
@@ -54,14 +54,14 @@ public class BestWeatherTask extends AsyncTask<String, Void, Weather> {
      *
      * @return
      */
-    private Weather getWeather() {
-        Weather weather = null;
+    private WeatherData getWeather() {
+        WeatherData weather = null;
         existWeather = false;
         try {
             Retrofit retrofit = new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
             IWeatherService iWeatherService = retrofit.create(IWeatherService.class);
-            Call<Weather> call = iWeatherService.getWeather(units, latitude, longitude, apiKey);
-            Response<Weather> response = call.execute();
+            Call<WeatherData> call = iWeatherService.getWeather(units, latitude, longitude, apiKey);
+            Response<WeatherData> response = call.execute();
             Log.e("LOG", "Retrofit Response: " + response.raw().toString());
 
             if (response.body() != null) {
@@ -79,7 +79,7 @@ public class BestWeatherTask extends AsyncTask<String, Void, Weather> {
         return weather;
     }
     @Override
-    protected void onPostExecute(Weather weather) {
+    protected void onPostExecute(WeatherData weather) {
         if (weather != null && existWeather) {
             iBestWeatherResponse.weatherResponse(true, weather);
         } else {

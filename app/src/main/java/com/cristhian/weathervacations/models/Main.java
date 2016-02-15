@@ -51,6 +51,10 @@ public class Main implements Parcelable {
     @SerializedName("placeName")
     String placeName;
 
+    @Expose
+    @SerializedName("id")
+    private Integer id;
+
     public Double getTemp() {
         return temp;
     }
@@ -131,6 +135,14 @@ public class Main implements Parcelable {
         this.placeName = placeName;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public static final Parcelable.Creator<Main> CREATOR = new Parcelable.Creator<Main>() {
 
         public Main createFromParcel(Parcel source) {
@@ -146,6 +158,7 @@ public class Main implements Parcelable {
             main.lon = source.readDouble();
             main.lat = source.readDouble();
             main.placeName = source.readString();
+            main.id = source.readInt();
 
             return main;
 
@@ -176,5 +189,6 @@ public class Main implements Parcelable {
         parcel.writeDouble(lon);
         parcel.writeDouble(lat);
         parcel.writeString(placeName);
+        parcel.writeInt(id);
     }
 }

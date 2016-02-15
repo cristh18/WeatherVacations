@@ -6,10 +6,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,15 +18,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.cristhian.weathervacations.R;
 import com.cristhian.weathervacations.interfaces.IWeatherResponse;
 import com.cristhian.weathervacations.models.Main;
-import com.cristhian.weathervacations.models.Weather;
+import com.cristhian.weathervacations.models.WeatherData;
 import com.cristhian.weathervacations.network.WeatherTask;
-import com.cristhian.weathervacations.utils.Utilies;
 
 /**
  * Created by ctolosa on 02/13/2016.
@@ -83,7 +79,7 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
 
 
     @Override
-    public void weatherResponse(Boolean response, Weather weather) {
+    public void weatherResponse(Boolean response, WeatherData weather) {
         if (response) {
             goToMainActivity(weather);
             Toast.makeText(this, getResources().getString(R.string.ok), Toast.LENGTH_LONG);
@@ -95,12 +91,13 @@ public class LaunchScreenActivity extends AppCompatActivity implements IWeatherR
     /**
      *
      */
-    private void goToMainActivity(Weather weather) {
+    private void goToMainActivity(WeatherData weather) {
         intent = new Intent(LaunchScreenActivity.this, MainActivity.class);
         Bundle mBundle = new Bundle();
         Main mainTemp = weather.getMain();
         mainTemp.setLon(longitudeNetwork);
         mainTemp.setLat(latitudeNetwork);
+        mainTemp.setId(weather.getWeather().get(0).getId());
         mBundle.putParcelable("weatherDetail", mainTemp);
         intent.putExtras(mBundle);
         startActivity(intent);

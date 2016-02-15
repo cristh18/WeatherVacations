@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.cristhian.weathervacations.interfaces.IWeatherResponse;
 import com.cristhian.weathervacations.interfaces.IWeatherService;
-import com.cristhian.weathervacations.models.Weather;
+import com.cristhian.weathervacations.models.WeatherData;
 
 import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
@@ -16,7 +16,7 @@ import retrofit2.Retrofit;
 /**
  * Created by Cristhian on 2/14/2016.
  */
-public class WeatherTask extends AsyncTask<String, Void, Weather> {
+public class WeatherTask extends AsyncTask<String, Void, WeatherData> {
 
     private final String LOG_TAG = WeatherTask.class.getSimpleName();
 
@@ -40,7 +40,7 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
     }
 
     @Override
-    protected Weather doInBackground(String... params) {
+    protected WeatherData doInBackground(String... params) {
         url = params[0];
         latitude = params[1];
         longitude = params[2];
@@ -48,7 +48,7 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
         units = params[4];
         try {
             Thread.sleep(SPLASH_TIME);
-            Weather weather = getWeather();
+            WeatherData weather = getWeather();
             return weather;
         } catch (InterruptedException e) {
             Log.e(LOG_TAG, e.getMessage());
@@ -61,14 +61,14 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
      *
      * @return
      */
-    private Weather getWeather() {
-        Weather weather = null;
+    private WeatherData getWeather() {
+        WeatherData weather = null;
         existWeather = false;
         try {
             Retrofit retrofit = new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
             IWeatherService iWeatherService = retrofit.create(IWeatherService.class);
-            Call<Weather> call = iWeatherService.getWeather(units, latitude, longitude, apiKey);
-            Response<Weather> response = call.execute();
+            Call<WeatherData> call = iWeatherService.getWeather(units, latitude, longitude, apiKey);
+            Response<WeatherData> response = call.execute();
             Log.e("LOG", "Retrofit Response: " + response.raw().toString());
 
             if (response.body() != null) {
@@ -86,7 +86,7 @@ public class WeatherTask extends AsyncTask<String, Void, Weather> {
     }
 
     @Override
-    protected void onPostExecute(Weather weather) {
+    protected void onPostExecute(WeatherData weather) {
         if (weather != null && existWeather) {
             iWeatherResponse.weatherResponse(true, weather);
         } else {

@@ -1,6 +1,6 @@
 package com.cristhian.weathervacations.interfaces;
 
-import com.cristhian.weathervacations.models.Weather;
+import com.cristhian.weathervacations.models.WeatherData;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -12,7 +12,7 @@ import retrofit2.http.Query;
 public interface IWeatherService {
 
     @GET("weather?")
-    Call<Weather> getWeather(
+    Call<WeatherData> getWeather(
             @Query("units") String units,
             @Query("lat") String latitude,
             @Query("lon") String longitude,

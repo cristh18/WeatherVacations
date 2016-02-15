@@ -1,35 +1,38 @@
 package com.cristhian.weathervacations.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cristhian.weathervacations.R;
 import com.cristhian.weathervacations.activities.LaunchScreenActivity;
 import com.cristhian.weathervacations.interfaces.IBestWeatherResponse;
-import com.cristhian.weathervacations.interfaces.IWeatherResponse;
 import com.cristhian.weathervacations.models.Main;
 import com.cristhian.weathervacations.models.Place;
-import com.cristhian.weathervacations.models.Weather;
+import com.cristhian.weathervacations.models.WeatherData;
 import com.cristhian.weathervacations.network.BestWeatherTask;
-import com.cristhian.weathervacations.network.WeatherTask;
 import com.cristhian.weathervacations.utils.Utilies;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,21 +50,24 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
     GoogleMap mMap;
 
     EditText searchField;
-    Button searchButton;
-    TextView textView;
-
     EditText searchField2;
-    Button searchButton2;
 
     boolean firstLocation;
     boolean secondLocation;
-    TextView textView2;
 
+    TextView textView;
+    TextView textViewName2;
+    TextView textView2;
+    TextView textViewName3;
     TextView textView3;
     TextView textView4;
 
+    ImageView weatherImage;
+    ImageView weatherImage2;
+    ImageView weatherImage3;
+
     List<Place> places;
-    public static List<Weather> weathers = new ArrayList<>(2);
+    public static List<WeatherData> weathers = new ArrayList<>(2);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,10 +83,9 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
         places = new ArrayList<Place>(2);
 
         searchField = (EditText) rootView.findViewById(R.id.editText1);
-        searchButton = (Button) rootView.findViewById(R.id.button1);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        searchField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onFocusChange(View v, boolean hasFocus) {
                 try {
                     firstLocation = true;
                     secondLocation = false;
@@ -92,10 +97,9 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
         });
 
         searchField2 = (EditText) rootView.findViewById(R.id.editText2);
-        searchButton2 = (Button) rootView.findViewById(R.id.button2);
-        searchButton2.setOnClickListener(new View.OnClickListener() {
+        searchField2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onFocusChange(View v, boolean hasFocus) {
                 try {
                     firstLocation = false;
                     secondLocation = true;
@@ -106,15 +110,46 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
             }
         });
 
-        textView = (TextView) rootView.findViewById(R.id.weather);
-        textView.setText("Temp: ".concat(Utilies.formatTemperature(getActivity(), main.getTemp())));
-        //textView.setText("Temp: ".concat(String.valueOf(main.getTemp())));
+        searchField2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    try {
+                        firstLocation = false;
+                        secondLocation = true;
+                        geoLocate(v);
+                    } catch (IOException e) {
+                        Log.e(LOG_TAG, e.toString());
+                    }
+                    handled = true;
+                }
+                return handled;
+            }
+        });
 
+
+        textView = (TextView) rootView.findViewById(R.id.weather);
+        textView.setText(Utilies.formatTemperature(getActivity(), main.getTemp()));
+
+        weatherImage = (ImageView) rootView.findViewById(R.id.weatherImage);
+//        Picasso.with(getActivity()).load(Utilies.getArtResourceForWeatherCondition(main.getId())).placeholder(R.drawable.placeholder).error(R.drawable.placeholder_error).into(appsViewHolder.imageView);
+        Picasso.with(getActivity()).load(Utilies.getArtResourceForWeatherCondition(main.getId())).into(weatherImage);
+
+
+        textViewName2 = (TextView) rootView.findViewById(R.id.weather2PlaceName);
+        textViewName2.setVisibility(View.GONE);
         textView2 = (TextView) rootView.findViewById(R.id.weather2);
         textView2.setVisibility(View.GONE);
+        weatherImage2 = (ImageView) rootView.findViewById(R.id.weather2Image);
+        weatherImage2.setVisibility(View.GONE);
 
+        textViewName3 = (TextView) rootView.findViewById(R.id.weather3PlaceName);
+        textViewName3.setVisibility(View.GONE);
         textView3 = (TextView) rootView.findViewById(R.id.weather3);
         textView3.setVisibility(View.GONE);
+        weatherImage3 = (ImageView) rootView.findViewById(R.id.weather3Image);
+        weatherImage3.setVisibility(View.GONE);
 
         textView4 = (TextView) rootView.findViewById(R.id.weather4);
         textView4.setVisibility(View.GONE);
@@ -233,7 +268,7 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
      * @param weather
      */
     @Override
-    public void weatherResponse(Boolean response, Weather weather) {
+    public void weatherResponse(Boolean response, WeatherData weather) {
         if (response) {
             Log.e(LOG_TAG, "There are response from selected site");
             if (weathers != null && weathers.size() < 2) {
@@ -242,14 +277,26 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
                     //places.clear();
                     //update UI
                     textView2.setVisibility(View.VISIBLE);
-                    textView2.setText("Temp in " + weathers.get(0).getMain().getPlaceName() + " is: " + Utilies.formatTemperature(getActivity(), weathers.get(0).getMain().getTemp()));
+                    textViewName2.setVisibility(View.VISIBLE);
+                    weatherImage2.setVisibility(View.VISIBLE);
+                    textViewName2.setText(weathers.get(0).getMain().getPlaceName().toString());
+                    textView2.setText(Utilies.formatTemperature(getActivity(), weathers.get(0).getMain().getTemp()).toString());
+                    Picasso.with(getActivity()).load(Utilies.getArtResourceForWeatherCondition(weathers.get(0).getWeather().get(0).getId())).into(weatherImage2);
 
                     textView3.setVisibility(View.VISIBLE);
-                    textView3.setText("Temp in " + weathers.get(1).getMain().getPlaceName() + " is: " + Utilies.formatTemperature(getActivity(), weathers.get(1).getMain().getTemp()));
+                    textViewName3.setVisibility(View.VISIBLE);
+                    weatherImage3.setVisibility(View.VISIBLE);
+                    textViewName3.setText(weathers.get(1).getMain().getPlaceName().toString());
+                    textView3.setText(Utilies.formatTemperature(getActivity(), weathers.get(1).getMain().getTemp()).toString());
+                    Picasso.with(getActivity()).load(Utilies.getArtResourceForWeatherCondition(weathers.get(1).getWeather().get(0).getId())).into(weatherImage3);
 
                     textView4.setVisibility(View.VISIBLE);
                     String namePlaceMaxWeather = getMaxWeather(weathers);
                     textView4.setText("The place to visit this vacations is: " + namePlaceMaxWeather);
+                    places.clear();
+                    weathers.clear();
+                    firstLocation = false;
+                    secondLocation = false;
 
                 }
 
@@ -258,15 +305,14 @@ public class HomeFragment extends Fragment implements IBestWeatherResponse {
     }
 
     /**
-     *
      * @param weathers
      * @return
      */
-    private String getMaxWeather(List<Weather> weathers) {
+    private String getMaxWeather(List<WeatherData> weathers) {
         String vacationPlace = null;
         Double maxWeather = Math.max(weathers.get(0).getMain().getTemp(), weathers.get(1).getMain().getTemp());
-        for (Weather w:weathers) {
-            if (maxWeather.doubleValue()==w.getMain().getTemp().doubleValue()){
+        for (WeatherData w : weathers) {
+            if (maxWeather.doubleValue() == w.getMain().getTemp().doubleValue()) {
                 vacationPlace = w.getMain().getPlaceName();
                 break;
             }
